@@ -13,12 +13,52 @@ class MyModel(nn.Module):
         # to size appropriately the output of your classifier, and if you use
         # the Dropout layer, use the variable "dropout" to indicate how much
         # to use (like nn.Dropout(p=dropout))
+        self.model = nn.Sequential(
+            nn.Conv2d(in_channels = 3, out_channels = 64, kernel_size = 3, stride = 1,padding = 1
+        ),
+            nn.ReLU(),
+            nn.BatchNorm2d(64),
+            nn.MaxPool2d(2,2),
+            nn.Conv2d(in_channels = 64, out_channels = 128, kernel_size = 3, stride = 1,padding = 1
+        ),
+            nn.ReLU(),
+            nn.BatchNorm2d(128),
+            nn.MaxPool2d(2,2),
+            nn.Conv2d(in_channels = 128, out_channels = 256, kernel_size = 3, stride = 1,padding = 1
+        ),
+            nn.ReLU(),
+            nn.BatchNorm2d(256),
+            nn.MaxPool2d(2,2),
+            nn.Conv2d(in_channels = 256, out_channels = 1024, kernel_size = 3, stride = 1,padding = 1
+        ),
+            nn.ReLU(),
+            nn.BatchNorm2d(1024),
+            nn.MaxPool2d(2,2),
+            nn.Flatten(),
+            nn.Linear(1024 * 28 * 28,20000), # Number of features = 64*28*28
+            nn.Dropout(p=dropout),
+            nn.ReLU(),
+            nn.Linear(20000,10000),
+            nn.Dropout(p=dropout),
+            nn.ReLU(),            
+            nn.Linear(10000,5000),
+            nn.Dropout(p=dropout),
+            nn.ReLU(),
+            nn.Linear(5000,500),
+            nn.Dropout(p=dropout),
+            nn.ReLU(),
+            nn.Linear(in_features = 500,out_features = num_classes)
+        )
+            
+        
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
+                
         # YOUR CODE HERE: process the input tensor through the
         # feature extractor, the pooling and the final linear
         # layers (if appropriate for the architecture chosen)
-        return x
+            x= self.model(x)
+            return x
 
 
 ######################################################################################
